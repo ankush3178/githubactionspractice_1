@@ -13,8 +13,11 @@ on:
       - 'dev-*'
     paths-ignore:
       - 'readme'
+env:
+  HERO_OF_HEROES: AVI-BHAI
 jobs:
   test:
+    environment: dev
     runs-on: ubuntu-latest
     steps:
       - name: get code
@@ -25,6 +28,8 @@ jobs:
         run: npm run lint
       - name: run tests
         run: npm test
+      - name: envrionment variable
+        run: echo ${{secrets.HERO_NO_1}} echo ${{secrets.BHAI_BHAI}}
 
   build:
     needs: test
@@ -54,6 +59,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: global-var-print
+        run: echo ${{env.HERO_OF_HEROES}} 
       - name: download-dist-files
         uses: actions/download-artifact@v4
         with:
