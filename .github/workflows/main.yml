@@ -1,5 +1,17 @@
 name: new test
-on: push
+on: 
+  pull_request:
+    types:
+      - closed
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - dev
+      - 'feature/**'
+      - 'dev-*'
+    paths-ignore:
+      - 'readme'
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -8,7 +20,46 @@ jobs:
         uses: actions/checkout@v4
       - name: install dependencies
         run: npm ci
+      - name: lint
+        run: npm run lint
       - name: run tests
         run: npm test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    outputs: 
+      script-file: ${{steps.publish.outputs.script-file}}
+    steps:
+      - name: get code
+        uses: actions/checkout@v4
+      - name: install dependencies
+        run: npm ci
+      - name: run lint
+        run: npm run lint
+      - name: create-build
+        run: npm run build
+      - name: upload-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: |
+            dist
+            package.json
+      - name: collect-filename
+        id: publish
+        run: find dist/assets/*.js -type f -execdir exho 'script-file={}'>> $GITHUB_OUTPUT ';'
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: download-dist-files
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-files
+      - name: Display structure of downloaded files
+        run: ls
+      - name: print-publish-file
+        run: echo "${{needs.build.outputs.script-file}}"
       - name: deploy
         run: echo "deploying...."
