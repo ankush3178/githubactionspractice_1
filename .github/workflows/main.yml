@@ -84,20 +84,27 @@ jobs:
         run: ls
       - name: print-publish-file
         run: echo "${{needs.build.outputs.script-file}}"
-      - name: workflow-call-main2
-        uses: ./.github/workflows/main2.yml
-        with:
-          config-path: dist-files
-        #run: echo ""
-      - name: print-workflow-usable
-        run: echo "${{needs.workflow-call-main2.outputs.filename1}}"
+      # - name: workflow-call-main2
+      #   uses: ./.github/workflows/main2.yml
+      #   with:
+      #     config-path: dist-files
+      #   #run: echo ""
+      
       - name: deploy
         run: echo "deploying...."
-  report:
+  job1:
     needs: deploy
+    uses: ./.github/workflows/main2.yml
+    with:
+          config-path: dist-files    
+
+  report:
+    needs: job1
     runs-on: ubuntu-latest
     if: ${{ failure() }}
     steps:
+      - name: print-workflow-usable
+        run: echo "${{needs.workflow-call-main2.outputs.filename1}}"
       - name: report
         #if: ${{ failure() }} 
         run: echo "reporting...."
