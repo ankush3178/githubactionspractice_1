@@ -34,7 +34,7 @@ jobs:
       - name: lint
         run: npm run lint
       - name: run tests
-        continue-on-error: true
+        #continue-on-error: true
         run: npm test
       - name: envrionment variable
         run: echo ${{secrets.HERO_NO_1}} echo ${{secrets.BHAI_BHAI}}
