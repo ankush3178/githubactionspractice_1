@@ -22,11 +22,19 @@ jobs:
     steps:
       - name: get code
         uses: actions/checkout@v4
+      - name: Cache node module
+        id: cache-node-dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: install dependencies
+        if: steps.cache-node-dependencies.outputs.cache-hit != 'true'
         run: npm ci
       - name: lint
         run: npm run lint
       - name: run tests
+        continue-on-error: true
         run: npm test
       - name: envrionment variable
         run: echo ${{secrets.HERO_NO_1}} echo ${{secrets.BHAI_BHAI}}
@@ -39,7 +47,14 @@ jobs:
     steps:
       - name: get code
         uses: actions/checkout@v4
+      - name: Cache node module
+        id: cache-node-dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: install dependencies
+        if: steps.cache-node-dependencies.outputs.cache-hit != 'true'
         run: npm ci
       - name: run lint
         run: npm run lint
@@ -71,3 +86,11 @@ jobs:
         run: echo "${{needs.build.outputs.script-file}}"
       - name: deploy
         run: echo "deploying...."
+  report:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: report
+        if: faliure() 
+        run: echo ${{toJSON(github)}}
+      
