@@ -89,8 +89,9 @@ jobs:
   report:
     needs: deploy
     runs-on: ubuntu-latest
+    if: faliure()
     steps:
       - name: report
-        if: ${{ failure() }} 
+        #if: ${{ failure() }} 
         run: echo ${{toJSON(github)}}
       
