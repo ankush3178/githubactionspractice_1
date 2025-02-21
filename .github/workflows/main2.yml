@@ -9,7 +9,7 @@ on:
         default: dist
     outputs: 
       filename1:
-        descriptions: "my file"
+        description: "my file"
         value: ${{jobs.triage.outputs.filename}}
 #    secrets:
 #      token:
