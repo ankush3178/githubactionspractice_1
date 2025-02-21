@@ -91,6 +91,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: report
-        if: faliure() 
+        if: ${{ failure() }} 
         run: echo ${{toJSON(github)}}
       
