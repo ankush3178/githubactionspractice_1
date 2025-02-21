@@ -1,0 +1,30 @@
+name: Reusable workflow
+
+on:
+  workflow_call:
+    inputs:
+      config-path:
+        required: true
+        type: string
+        default: dist
+    outputs: 
+      filename1:
+        descriptions: "my file"
+        value: ${{jobs.triage.outputs.filename}}
+#    secrets:
+#      token:
+#        required: true
+
+jobs:
+  triage:
+    outputs:
+      filename: ${{ steps.step1.outputs.firstword }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: download-dist-files
+      uses: actions/download-artifact@v4
+      with:
+         name: ${{ inputs.config-path }}
+    - id: step1
+      run: echo "firstword=hello" >> $GITHUB_OUTPUT
+      

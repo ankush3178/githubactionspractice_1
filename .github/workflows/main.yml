@@ -84,6 +84,13 @@ jobs:
         run: ls
       - name: print-publish-file
         run: echo "${{needs.build.outputs.script-file}}"
+      - name: workflow-call-main2
+        uses: ./.github/workflows/main2.yml@v1
+        with:
+          config-path: dist-files
+        #run: echo ""
+      - name: print-workflow-usable
+        run: echo "${{needs.workflow-call-main2.outputs.filename1}}"
       - name: deploy
         run: echo "deploying...."
   report:
