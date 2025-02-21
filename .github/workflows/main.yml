@@ -89,7 +89,7 @@ jobs:
   report:
     needs: deploy
     runs-on: ubuntu-latest
-    if: faliure()
+    if: ${{ failure() }}
     steps:
       - name: report
         #if: ${{ failure() }} 
