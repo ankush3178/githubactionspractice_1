@@ -21,10 +21,10 @@ jobs:
       filename: ${{ steps.step1.outputs.firstword }}
     runs-on: ubuntu-latest
     steps:
-    - name: download-dist-files
-      uses: actions/download-artifact@v4
-      with:
-         name: ${{ inputs.config-path }}
+    # - name: download-dist-files
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #      name: ${{ inputs.config-path }}
     - id: step1
       run: echo "firstword=hello" >> $GITHUB_OUTPUT
       
